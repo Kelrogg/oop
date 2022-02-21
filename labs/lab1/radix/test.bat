@@ -18,23 +18,16 @@ if ERRORLEVEL 1 goto err
 
 echo Test 3
 rem При запуске с правильными параметрами ожидается нулевой код возврата
-%PROGRAM% "test-data\no-search-string.txt" "%TEMP%\no-search-string.txt" bird cat
+%PROGRAM% "test-data\fox.txt" "%TEMP%\fox.txt" bird cat
 if ERRORLEVEL 1 goto err
-fc.exe "%TEMP%\no-search-string.txt" "test-data\no-search-string-result.txt" >nul
+fc.exe "%TEMP%\fox.txt" "test-data\fox.txt" >nul
 if ERRORLEVEL 1 goto err
 
 echo Test 4
 rem При запуске с правильными параметрами ожидается нулевой код возврата
-%PROGRAM% "test-data\search-string-exists.txt" "%TEMP%\search-string-exists.txt" dog cat
+%PROGRAM% "test-data\fox.txt" "%TEMP%\fox.txt" dog cat
 if ERRORLEVEL 1 goto err
-fc.exe "%TEMP%\search-string-exists.txt" "test-data\search-string-exists-result.txt" >nul
-if ERRORLEVEL 1 goto err
-
-echo Test5
-rem Запуск с 4 параметрами (пустой replacementString)
-%PROGRAM% "test-data\empty-replacementString.txt" "%TEMP%\empty-replacementString.txt" dog
-if ERRORLEVEL 1 goto err
-fc.exe "%TEMP%\empty-replacementString.txt" "test-data\empty-replacementString-result.txt" >nul
+fc.exe "%TEMP%\fox.txt" "test-data\fox-replace-dog-with-cat.txt" >nul
 if ERRORLEVEL 1 goto err
 
 echo OK

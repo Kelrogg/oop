@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\test-data">
+      <UniqueIdentifier>{6fd75de4-5ae1-49ab-ba4c-276e7a58e374}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -31,12 +34,31 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="test-data\empty.txt">
+      <Filter>Source Files\test-data</Filter>
+    </Text>
+    <Text Include="test-data\empty-replacementString.txt">
+      <Filter>Source Files\test-data</Filter>
+    </Text>
+    <Text Include="test-data\empty-replacementString-result.txt">
+      <Filter>Source Files\test-data</Filter>
+    </Text>
+    <Text Include="test-data\no-search-string.txt">
+      <Filter>Source Files\test-data</Filter>
+    </Text>
+    <Text Include="test-data\no-search-string-result.txt">
+      <Filter>Source Files\test-data</Filter>
+    </Text>
+    <Text Include="test-data\search-string-exists.txt">
+      <Filter>Source Files\test-data</Filter>
+    </Text>
+    <Text Include="test-data\search-string-exists-result.txt">
+      <Filter>Source Files\test-data</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="test.bat">
       <Filter>Source Files</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="test-data\fox.txt" />
-    <Text Include="test-data\fox-replace-dog-with-cat.txt" />
   </ItemGroup>
 </Project>
