@@ -63,7 +63,6 @@ int StringToInt(const std::string& str, int radix, bool& wasError)
 	bool minus = false;
 	int result = 0;
 	char currCh;
-
 	if (radix < 2 || radix > 35)
 	{
 		wasError = true;
@@ -73,15 +72,14 @@ int StringToInt(const std::string& str, int radix, bool& wasError)
 	for (size_t i = 0; i < str.size(); ++i)
 	{
 		currCh = std::toupper(str[i]);
-
 		if (dict.find(currCh) != dict.end() && dict[currCh] < radix)
 		{
+
 			if (CheckIntOverFlow(result, radix, dict[currCh]))
 			{
 				wasError = true;
-				return 0;
+				return 1;
 			}
-
 			result = result * radix + dict[currCh];
 			continue;
 		}
@@ -91,9 +89,8 @@ int StringToInt(const std::string& str, int radix, bool& wasError)
 			minus = true;
 			continue;
 		}
-
 		wasError = true;
-		return 0;
+		return 1;
 	}
 
 	if (minus)
@@ -104,20 +101,28 @@ int StringToInt(const std::string& str, int radix, bool& wasError)
 std::string IntToString(int n, int radix, bool& wasError)
 {
 	std::string str;
+	bool minus = false;
 
 	if (radix < 2 || radix > 35)
 	{
 		wasError = true;
 		return "";
 	}
+	if (!n)
+		return "0";
+
 	if (n < 0)
-		str.insert(str.begin(), '-');
+		minus = true;
 
 	while (n)
 	{
+		// How to get simultaneously and modulo and quotient ? (own compiler)
 		str.insert(str.begin(), Rrr[abs(n % radix)]);
 		n /= radix;
 	}
+
+	if (minus)
+		str.insert(str.begin(), '-');
 
 	return str;
 };

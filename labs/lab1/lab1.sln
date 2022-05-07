@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "radix_tests", "radix_tests\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crypt", "crypt\crypt.vcxproj", "{9BC3635A-2566-474A-8EB1-F2C5F8824C5E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "labyrinth", "labyrinth\labyrinth.vcxproj", "{7D5815B8-3663-4F61-BADC-C8A8618B1A21}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -61,6 +63,14 @@ Global
 		{9BC3635A-2566-474A-8EB1-F2C5F8824C5E}.Release|Win32.Build.0 = Release|Win32
 		{9BC3635A-2566-474A-8EB1-F2C5F8824C5E}.Release|x64.ActiveCfg = Release|x64
 		{9BC3635A-2566-474A-8EB1-F2C5F8824C5E}.Release|x64.Build.0 = Release|x64
+		{7D5815B8-3663-4F61-BADC-C8A8618B1A21}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7D5815B8-3663-4F61-BADC-C8A8618B1A21}.Debug|Win32.Build.0 = Debug|Win32
+		{7D5815B8-3663-4F61-BADC-C8A8618B1A21}.Debug|x64.ActiveCfg = Debug|x64
+		{7D5815B8-3663-4F61-BADC-C8A8618B1A21}.Debug|x64.Build.0 = Debug|x64
+		{7D5815B8-3663-4F61-BADC-C8A8618B1A21}.Release|Win32.ActiveCfg = Release|Win32
+		{7D5815B8-3663-4F61-BADC-C8A8618B1A21}.Release|Win32.Build.0 = Release|Win32
+		{7D5815B8-3663-4F61-BADC-C8A8618B1A21}.Release|x64.ActiveCfg = Release|x64
+		{7D5815B8-3663-4F61-BADC-C8A8618B1A21}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,7 +5,7 @@ int main(int argc, char* argv[])
 {
 	int radixOld, radixNew, num;
 	std::string str;
-	bool wasError;
+	bool wasError = false;
 
 	if (argc != 4)
 	{
@@ -15,9 +15,19 @@ int main(int argc, char* argv[])
 	}
 
 	radixOld = StringToInt(argv[1], 10, wasError);
+	if (wasError)
+	{
+		std::cout << "Invalid notation" << std::endl;
+		return 1;
+	}
 	radixNew = StringToInt(argv[2], 10, wasError);
-	str = argv[3];
+	if (wasError)
+	{
+		std::cout << "Invalid destination notation" << std::endl;
+		return 1;
+	}
 
+	str = argv[3];
 	num = StringToInt(str, radixOld, wasError);
 	if (wasError)
 	{
@@ -25,12 +35,13 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	std::cout << IntToString(num, radixNew, wasError) << std::endl;
+	std::string resFinal = IntToString(num, radixNew, wasError);
 	if (wasError)
 	{
 		std::cout << "Invalid destination radix" << std::endl;
 		return 1;
 	}
+	std::cout << resFinal;
 
 	return 0;
 }

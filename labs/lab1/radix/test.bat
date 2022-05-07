@@ -10,24 +10,49 @@ rem При запуске без параметров ожидается ненулевой код возврата
 if NOT ERRORLEVEL 1 goto err
 
 echo Test 2
-rem проверяем замену строки пустого файла (копируем его во временную папку текущего пользователя)
-%PROGRAM% "test-data\empty.txt" "%TEMP%\empty.txt" a b
-if ERRORLEVEL 1 goto err
-fc.exe "%TEMP%\empty.txt" "test-data\empty.txt" >nul
-if ERRORLEVEL 1 goto err
+rem 
+%PROGRAM% 36 10 0 >"%TEMP%\radixOld36.txt"
+if NOT ERRORLEVEL 1 goto err
 
 echo Test 3
-rem При запуске с правильными параметрами ожидается нулевой код возврата
-%PROGRAM% "test-data\fox.txt" "%TEMP%\fox.txt" bird cat
-if ERRORLEVEL 1 goto err
-fc.exe "%TEMP%\fox.txt" "test-data\fox.txt" >nul
-if ERRORLEVEL 1 goto err
+rem 
+%PROGRAM% 16 1 0 >"%TEMP%\radixNew1.txt"
+if NOT ERRORLEVEL 1 goto err
 
 echo Test 4
-rem При запуске с правильными параметрами ожидается нулевой код возврата
-%PROGRAM% "test-data\fox.txt" "%TEMP%\fox.txt" dog cat
+rem 
+%PROGRAM% 16 10 "1F" >"%TEMP%\31.txt"
 if ERRORLEVEL 1 goto err
-fc.exe "%TEMP%\fox.txt" "test-data\fox-replace-dog-with-cat.txt" >nul
+fc.exe "test-data\31.txt" "%TEMP%\31.txt" >nul
+if ERRORLEVEL 1 goto err
+
+echo Test 5
+rem 
+%PROGRAM% 20 2 "-FF1" >"%TEMP%\-1100010011101.txt"
+if ERRORLEVEL 1 goto err
+fc.exe "test-data\-1100010011101.txt" "%TEMP%\-1100010011101.txt">nul
+if ERRORLEVEL 1 goto err
+
+echo Test 6
+rem 
+%PROGRAM% 16 10 0 >"%TEMP%\0.txt"
+if ERRORLEVEL 1 goto err
+fc.exe "test-data\0.txt" "%TEMP%\0.txt">nul
+if ERRORLEVEL 1 goto err
+
+
+echo Test 7
+rem 
+%PROGRAM% 16 10 1F >"%TEMP%\31.txt"
+if ERRORLEVEL 1 goto err
+fc.exe "test-data\31.txt" "%TEMP%\31.txt">nul
+if ERRORLEVEL 1 goto err
+
+echo Test 8
+rem 
+%PROGRAM% 10 16 2147483647 >"%TEMP%\2147483647.txt"
+if ERRORLEVEL 1 goto err
+fc.exe "test-data\2147483647.txt" "%TEMP%\2147483647.txt">nul
 if ERRORLEVEL 1 goto err
 
 echo OK

@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 
 	if (!outputFile.is_open())
 	{
-		std::cout << "Failed to open " << argv[2] << " for reading\n";
+		std::cout << "Failed to open " << argv[2] << " for output\n";
 		return 1;
 	}
 

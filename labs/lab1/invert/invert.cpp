@@ -1,175 +1,182 @@
-﻿#include "invert.h"
-#include <iomanip>
+﻿#include "stdafx.h"
+#include "invert.h"
 
-const int SIZE = 3;
-
-struct DiagStep
+std::optional<Args> ParseParams(int argc, char* argv[])
 {
-	size_t x, y, size;
-	DiagStep(size_t size)
+	if (argc != 2)
+	{
+		std::cerr << "Received invalid params count\n"
+				  << "Usage: invert.exe <matrix file1>" << std::endl;
+		exit(1);
+	}
+
+	Args args(argv[1]);
+	return args;
+}
+
+MatrixStep::MatrixStep(int size)
 	{
 		this->x = 0;
 		this->y = 0;
 		this->size = size;
 	}
-
-	size_t getX() { return x; }
-
-	size_t getY() { return y; }
-
-	size_t getY() { return size; }
-
-	int setX(size_t x) 
+int MatrixStep::GetX() { return x; }
+int MatrixStep::GetY() { return y; }
+int MatrixStep::GetSize() { return size; }
+void MatrixStep::SetX(int x)
 	{
 		this->x = x;
-		return 0;
 	}
-
-	int setY(size_t y)
+void MatrixStep::SetY(int y)
 	{
 		this->y = y;
-		return 0;
 	}
-
-	int makeStep(bool way)
+void MatrixStep::IncY()
 	{
+		++(this->y);
+		CheckOutOfRange();
+	}
+void MatrixStep::DecY()
+	{
+		--(this->y);
+		CheckOutOfRange();
+	}
+void MatrixStep::IncX()
+	{
+		++(this->x);
+		CheckOutOfRange();
+	}
+void MatrixStep::DecX()
+	{
+		--(this->x);
+		CheckOutOfRange();
+	}
+void MatrixStep::Step(bool way)
+	{
+		++y;
+
 		if (way)
 		{
 			++x;
-			++y;
-			if (x >= size)
-				x -= size;
-			if (y >= size)
-				y -= size;
 		}
 		if (!way)
 		{
 			--x;
-			++y;
-			if (x < 0)
-				x += size;
-			if (y >= size)
-				y -= size;
 		}
-
-		return 0;
+		CheckOutOfRange();
 	}
-};
-
-int freeMemory(int** matrix) {
-	for (size_t i = 0; i < SIZE; ++i)
+void MatrixStep::CheckOutOfRange()
 	{
-		delete[] matrix[i];
+		if (y >= size)
+			y -= size;
+		if (x < 0)
+			x += size;
+		if (x >= size)
+			x -= size;
 	}
-	delete[] matrix;
+
+int ReadMatrix(std::string fileName, Matrix3x3& matrix)
+{
+	// cout << fstream::app << endl;		1
+	// cout << fstream::binary << endl;		4
+	// cout << fstream::in << endl;			8
+	// cout << fstream::out << endl;		16
+	// cout << fstream::trunc << endl;		32
+
+	std::ifstream fin(fileName);
+	if (!fin.is_open())
+	{
+		std::cerr << "Failed to open " << fileName << std::endl;
+		exit(1);
+	}
+
+	for (std::_Array_iterator row = matrix.begin(), end = matrix.end(); row != end; ++row)
+	{
+		for (std::_Array_iterator cell = row->begin(), end = row->end(); cell != end; ++cell)
+		{
+			fin >> *cell;
+		}
+	}
+
+	return 0;
 }
 
-int findAddition(int** A, size_t y, size_t x, size_t SIZE)
+void PrintMatrix(const Matrix3x3& matrix)
+{
+	for (std::_Array_const_iterator row = matrix.cbegin(), end = matrix.cend(); row != end; ++row)
+	{
+		for (std::_Array_const_iterator cell = row->cbegin(), end = row->cend(); cell != end; ++cell)
+		{
+			std::cout << std::fixed << std::setprecision(3) << *cell << "\t";
+		}
+		std::cout << std::endl;
+	}
+}
+
+double FindAddition(const Matrix3x3& A, int y, int x, int SIZE)
 {
 	if (x < 0 || y < 0 || x >= SIZE || y >= SIZE)
 	{
-		std::cout << "Incorrect index" << std::endl;
-		freeMemory(A);
+		std::cerr << "Incorrect index\n";
 		exit(2);
 	}
 
-	int res = 0;
-	long double positive;
-	long double negative;
-	DiagStep stepBwd(SIZE);
-	DiagStep stepFwd(SIZE);
+	double res = 0;
+	double positive = 1;
+	double negative = 1;
+	MatrixStep stepBwd(SIZE);
+	MatrixStep stepFwd(SIZE);
 
-	for (size_t i = 0; i < SIZE - 1; ++i)
+	// Задаём начальное положение
+	stepBwd.SetX(x);
+	stepBwd.SetY(y);
+
+	stepFwd.SetX(x);
+	stepFwd.SetY(y);
+
+	for (size_t _ = 0; _ < SIZE - 1; ++_)
 	{
-		negative, positive = A[0][i];
-		stepFwd.setX(i);
-		stepFwd.setY(0);
-		stepBwd.setX(i);
-		stepBwd.setY(0);
-
-		for (size_t _ = 0; _ < SIZE - 1; ++_)
-		{
-			stepFwd.makeStep(true);
-			stepBwd.makeStep(false);
-
-			if (stepFwd.getY() == y)
-				stepFwd.setY(y + 1);
-
-			if (stepFwd.getX() == x)
-				stepFwd.setX(x + 1);
-
-			if (stepBwd.getY() == y)
-				stepBwd.setY(y + 1);
-
-			if (stepBwd.getX() == x)
-				stepBwd.setX(x - 1);
-
-			positive *= A[stepFwd.getY()][stepFwd.getX()];
-			negative *= A[stepBwd.getY()][stepBwd.getX()];
-		}
-		res += positive - negative;
+		stepBwd.Step(false);
+		stepFwd.Step(true);
+		negative *= A[stepBwd.GetY()][stepBwd.GetX()];
+		positive *= A[stepFwd.GetY()][stepFwd.GetX()];
 	}
+	res = positive - negative;
 
 	return res;
 }
 
-int main(int argc, char* argv[])
+Matrix3x3 Invert(const Matrix3x3& matrix,
+	int SIZE)
 {
-	long double det = 0;
-	int** inverseMatrix = new int*[SIZE];
-	for (size_t i = 0; i < SIZE; ++i)
-	{
-		inverseMatrix[i] = new int[SIZE];
-	}
-	
-	// Allocate
-	int** matrix = new int* [SIZE];
-	for (size_t i = 0; i < SIZE; ++i)
-	{
-		matrix[i] = new int[SIZE];
-	}
+	Matrix3x3 inverseMatrix;
+	double det = 0;
 
-	// Find det with algebraic additions in first row of inverse matrix
-	for (size_t x = 0; x < SIZE; ++x)
+	// Find det with algebraic additions in first column of inverse matrix
+	for (int x = 0; x < SIZE; ++x)
 	{
-		inverseMatrix[0][x] = findAddition(matrix, 0, x, SIZE);
-		if (x&1)
-		{
-			det -= inverseMatrix[0][x] * matrix[0][x];
-		}
-		if (!x&1)
-		{
-			det += inverseMatrix[0][x] * matrix[0][x];
-		}
+		inverseMatrix[x][0] = FindAddition(matrix, 0, x, SIZE);
+		det += inverseMatrix[x][0] * matrix[0][x];
 	}
 	if (!det)
 	{
-		std::cout << "Determinant = 0 => no inverseMatrix" << std::endl;
-		freeMemory(matrix);
-		freeMemory(inverseMatrix);
-		return 0;
+		std::cout << "Determinant = 0 => no inverseMatrix\n";
+		exit(0);
 	}
-	// Continue filling inverseMatrix form rows with index 1
-	for (size_t y = 1; y < SIZE; ++y)
+	// We need to "/ det" first column from stage "Find det"
+	for (int x = 0; x < SIZE; ++x)
 	{
-		for (size_t x = 0; x < SIZE; ++x)
+		inverseMatrix[x][0] /= det;
+	}
+
+	// Continue filling inverseMatrix from row with index 1
+	for (int y = 1; y < SIZE; ++y)
+	{
+		for (int x = 0; x < SIZE; ++x)
 		{
-			inverseMatrix[y][x] = findAddition(matrix, y, x, SIZE) / det;
+			inverseMatrix[x][y] = FindAddition(matrix, y, x, SIZE) / det;
 		}
 	}
 
-	// Output
-	for (size_t y = 0; y < SIZE; ++y)
-	{
-		for (size_t x = 0; x < SIZE; ++x)
-		{
-			std::cout << std::fixed << std::setprecision(3) << inverseMatrix[y][x] << "  ";
-		}
-		std::cout << std::endl;
-	}
-
-	freeMemory(matrix);
-	freeMemory(inverseMatrix);
-	// matrix = nullptr;
-	return 0;
+	return inverseMatrix;
 }
