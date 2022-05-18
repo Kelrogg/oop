@@ -77,10 +77,9 @@ TEST_CASE("encoded string is processed correctly")
 
 TEST_CASE("encoded stream with several lines is processed correctly")
 {
-	std::istringstream input("Cat &lt;says&gt;\n&quot;Meow&quot;. M&amp;M&apos;s");
-	std::ostringstream output;
-	const std::string result = "Cat <says>\n\"Meow\". M&M's\n";
-	HtmlDecode(input, output);
+	std::string input("Cat &lt;says&gt;\n&quot;Meow&quot;. M&amp;M&apos;s");
+	const std::string result = "Cat <says>\n\"Meow\". M&M's";
+	auto const decoded = HtmlDecode(input);
 
-	REQUIRE(output.str() == result);
+	REQUIRE(decoded == result);
 }

@@ -4,6 +4,6 @@
 #include <string>
 #include <vector>
 
-string FindReplacement(const string& html, size_t& replacementIndex);
+std::string FindReplacement(const std::string& html, size_t& replacementIndex);
 
-string HtmlDecode(string const& html);
+std::string HtmlDecode(std::string const& html);

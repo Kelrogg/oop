@@ -8,7 +8,6 @@ public:
 	typedef void (*Callback)(const char* substr);
 	shared_ptr<BorNode> root;
 	shared_ptr<BorNode> currentState;
-	shared_ptr<BorNode> term;
 
 	AhoCorasick();
 	void AddString(const string& str);
@@ -17,8 +16,7 @@ public:
 	// void UpdateTermsDownTrie(BorNode* currentNode);
 	void Stitch();
 	void Init(const vector<string>& params);
-	uint16_t Step(const char c);
-	uint16_t GetNearestTermLength() const;
+	bool Step(const char c);
 	bool nodeHas(const char c) const;
 	bool isRoot() const;
 	bool isTerm() const;

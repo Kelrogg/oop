@@ -39,18 +39,6 @@ map<string, string> SweepDiplicateKeys(map<string, string> const& params)
 	return res;
 }
 
-uint16_t RFind(vector<bool> const& vec) 
-{
-	for (auto it = vec.cend(), end = vec.cbegin(); it != end; --it)
-	{
-		if (*it)
-		{
-			return std::distance(it, vec.cbegin());
-		}
-	}
-	return 0;
-}
-
 string ExpandTemplate(string const& tpl, map<string, string> const& params)
 {
 	AhoCorasick trie;
@@ -58,68 +46,57 @@ string ExpandTemplate(string const& tpl, map<string, string> const& params)
 	res.reserve(tpl.length());
 	size_t searchPosition = 0;
 
-	string state, pattern;
-	vector<bool> terms;
-	uint16_t termLength = 0;
-
-	const vector<string> keys = GetMapKeys(SweepDiplicateKeys(params));
+	vector<string> keys = GetMapKeys(SweepDiplicateKeys(params));
+	std::sort(keys.begin(), keys.end(), std::less<string>());
 	trie.Init(keys);
 
-	while (searchPosition < tpl.length())
+	char symbol;
+	bool forth;
+	uint16_t termLength = 0;
+	uint16_t prefixLength;
+	string state, pattern;
+	// TODO: IDLize this
+	while (searchPosition < tpl.length() || state != "")
 	{
-		if (trie.currentState->isTerm())
-		{
-			termLength = state.length();//trie.currentState->length;
-		}
+		if (searchPosition < tpl.length())
+			symbol = tpl[searchPosition];
+		else
+			symbol = 0;
 
-		trie.Step(tpl[searchPosition]);
-		state.push_back(tpl[searchPosition]);
-
-		if (!trie.nodeHas(tpl[searchPosition]))
+		forth = trie.nodeHas(symbol);
+		
+		if (!forth)
 		{
-			uint16_t currLength = trie.currentState->length;
-			uint16_t prefixLength = state.length() - currLength;
+			termLength = trie.currentState->GetTermLength();
 
 			if (termLength)
-			{
-				pattern = state.substr(0, termLength);
-				res.append(params.at(pattern));
-				//res.append(state.substr(termLength, prefixLength - termLength));
-				//state = state.substr(prefixLength);
-				
-				// Откат. Перепроверка символов
-				if (prefixLength > termLength)
-				{
-					searchPosition -= state.length() - termLength;
-					trie.Reset();
-					state.clear();
-				}
-				if (prefixLength == termLength)
-				{
-					state = state.substr(termLength);
-				}
-			}
-			if (!termLength)
-			{
-				res.append(state.substr(0, prefixLength));
-				state = state.substr(prefixLength);
-			}
-		
-			termLength = 0;
+				res.append(params.at(state.substr(0, termLength)));
 		}
-
-		++searchPosition;
-	}
-
-	if (state != "")
-	{
-		if (termLength) // Instead: params.find(pattern) != params.end()
+		if (trie.Step(symbol))
 		{
-			pattern = state.substr(0, termLength);
-			res.append(params.at(pattern));
+			state.push_back(symbol);
+			++searchPosition;
 		}
-		res.append(state.substr(termLength));
+		if (!forth)
+		{
+			//termLength = trie.currentState->GetTermLength();
+			//
+			//if (termLength)
+			//	res.append(params.at(state.substr(0, termLength)));
+
+			//if (trie.Step(symbol))
+			//{
+			//	state.push_back(symbol);
+			//	++searchPosition;
+			//}
+
+			prefixLength = state.length() - trie.currentState->GetLength();
+			res.append(state.substr(termLength, prefixLength - termLength));
+			state.erase(0, prefixLength);
+		}
 	}
+	if (res != "" && res.back() == '\0')
+		res.pop_back();
 
 	return res;	
 }

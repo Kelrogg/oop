@@ -9,11 +9,12 @@ const Dictionary TEMPLATES = {
 	{ "&lt;", "<" },
 	{ "&gt;", ">" },
 	{ "&amp;", "&" },
-}; 
+};
 
 string FindReplacement(const string& html, size_t& replacementIndex)
 {
-	for (auto const& [candidate, replacement] : TEMPLATES)
+	// TODO C++1z
+	for (const auto& [candidate, replacement]: TEMPLATES)
 	{
 		if (html.compare(replacementIndex, candidate.length(), candidate) == 0)
 		{

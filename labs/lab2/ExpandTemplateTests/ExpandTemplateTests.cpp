@@ -155,7 +155,7 @@ SCENARIO("The given string has templates inside, which must be replaced accordin
 		{ "B", "[b]" },
 	};
 	const ParamsMap savedFourthParamsExample(paramsExampleFourth);
-
+	
 	WHEN("Search substrings doesn't intersect and insertion values doesn't contain search substrings")
 	{
 		std::string tpl = "Hello, %USER_NAME%. Today is {WEEK_DAY}.";
@@ -235,7 +235,6 @@ SCENARIO("The given string has templates inside, which must be replaced accordin
 		THEN("String expanded correctly, string template and params didn't changed")
 		{
 			std::string result = ExpandTemplate(tpl, paramsExampleFourth);
-
 			REQUIRE(result == expectedResult);
 
 			REQUIRE(tpl == savedTpl);
@@ -262,27 +261,26 @@ SCENARIO("The given string has templates inside, which must be replaced accordin
 		}
 	}
 
-	//paramsExampleFourth = {
-	//	{ "C", "[c]" },
-	//	{ "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC", "[long]" }
-	//};
-	//
-	//WHEN("Worst case")
-	//{
-	//	std::string tpl = "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC";
-	//
-	//	const std::string savedTpl{ tpl };
-	//	const std::string expectedResult = 
-	//		"[c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c]";
-	//
-	//	THEN("String expanded correctly")
-	//	{
-	//		std::string result = ExpandTemplate(tpl, paramsExampleFourth);
-	//
-	//		REQUIRE(result == expectedResult);
-	//
-	//		REQUIRE(tpl == savedTpl);
-	//		REQUIRE(paramsExampleFourth == savedFourthParamsExample);
-	//	}
-	//}
+	paramsExampleFourth = {
+		{ "C", "[c]" },
+		{ "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC", "[long]" }
+	};
+	
+	WHEN("The worst case")
+	{
+		std::string tpl = "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC";
+	
+		const std::string savedTpl{ tpl };
+		const std::string expectedResult = 
+			"[c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c][c]";
+	
+		THEN("String expanded correctly")
+		{
+			std::string result = ExpandTemplate(tpl, paramsExampleFourth);
+
+			REQUIRE(result == expectedResult);
+	
+			REQUIRE(tpl == savedTpl);
+		}
+	}
 }

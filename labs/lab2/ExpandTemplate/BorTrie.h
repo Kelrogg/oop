@@ -9,17 +9,20 @@ class BorNode
 public:
 	// TODO Unordered_map doesn`t work
 	map<const char, shared_ptr<BorNode>> links;
-	shared_ptr<BorNode> parent;
 	shared_ptr<BorNode> suffixLink;
-	uint16_t length;
 	shared_ptr<BorNode> term;
+	uint16_t length;
 
 	shared_ptr<BorNode> GetLink(const char c) const;
+	uint16_t GetTermLength() const;
+	uint16_t GetLength() const;
+	bool nodeHas(const char c) const;
+	bool wasTerm() const;
 	bool isTerm() const;
 
 	BorNode(shared_ptr<BorNode> suffixLink = nullptr)
 		: suffixLink(suffixLink)
-		, term(false)
+		, term(nullptr)
 		, length(0)
 	{
 	}

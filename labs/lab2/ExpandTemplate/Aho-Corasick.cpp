@@ -16,15 +16,15 @@ void AhoCorasick::AddString(const string& str)
 		shared_ptr<BorNode> childNode = currentNode->GetLink(*it);
 		if (!childNode)
 		{
-			childNode = shared_ptr<BorNode>(new BorNode);
+			childNode = shared_ptr<BorNode>(new BorNode(root));
 			childNode->length = currentNode->length + 1;
+
 			currentNode->links.emplace(*it, childNode);
-			childNode->parent = currentNode;
 		}
 
 		currentNode = childNode;
 	}
-	currentNode->term = true;
+	currentNode->term = currentNode;
 }
 
 /* void AhoCorasick::UpdateTermsDownTrie(shared_ptr<BorNode> node)
@@ -68,7 +68,7 @@ void AhoCorasick::Stitch()
 		shared_ptr<BorNode> currentNode = q.front();
 		q.pop();
 
-		if (currentNode->term)
+		if (currentNode->isTerm())
 		{
 			currentNode->suffixLink = root;
 		}
@@ -78,6 +78,11 @@ void AhoCorasick::Stitch()
 		{
 			const char symbol = iter->first;
 			shared_ptr<BorNode> child = iter->second;
+
+			if (!child->isTerm())
+			{
+			    child->term = currentNode->term;
+			}
 
 			// Defining .suffixLink for the childnode
 			shared_ptr<BorNode> tempNode = currentNode->suffixLink;
@@ -126,33 +131,12 @@ void AhoCorasick::Init(const vector<string>& params)
 	return res;
 }*/
 
-uint16_t AhoCorasick::GetNearestTermLength() const
-{
-	shared_ptr<BorNode> temp = currentState;
-
-	while (temp)
-	{
-		if (temp->isTerm())
-			return temp->length;
-
-		temp = temp->parent;
-	}
-	return 0;
-}
-
 bool AhoCorasick::nodeHas(const char c) const
 {
-	// return currentState->links.contains(c); // Since C++20
-	LinksMap::const_iterator iter = currentState->links.find(c);
-	if (iter != currentState->links.cend())
-	{
-		return 1;
-	}
-	return 0;
+	return currentState->nodeHas(c);
 }
 
-// Returns current state length
-uint16_t AhoCorasick::Step(const char c)
+bool AhoCorasick::Step(const char c)
 {
 	while (currentState)
 	{
@@ -160,13 +144,16 @@ uint16_t AhoCorasick::Step(const char c)
 		if (candidate)
 		{
 			currentState = candidate;
-			return candidate->length;
+			return true;
 		}
 		currentState = currentState->suffixLink;
+		if (currentState->wasTerm())
+		{
+			return false;
+		}
 	}
 	currentState = root;
-	return 0;
-
+	return true;
 }
 
 bool AhoCorasick::isRoot() const 
@@ -176,7 +163,7 @@ bool AhoCorasick::isRoot() const
 
 bool AhoCorasick::isTerm() const
 {
-	return currentState == term;
+	return currentState->isTerm();
 }
 
 void AhoCorasick::Reset()

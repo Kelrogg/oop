@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PrimeNumberGeneratorTests",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExpandTemplateTests", "ExpandTemplateTests\ExpandTemplateTests.vcxproj", "{887875CF-C5B1-46DB-B336-223E48FFB256}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HTMLDecodeTests", "HTMLDecodeTests\HTMLDecodeTests.vcxproj", "{11E07842-7DD3-43AC-944C-992182C492FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -91,6 +93,14 @@ Global
 		{887875CF-C5B1-46DB-B336-223E48FFB256}.Release|Win32.Build.0 = Release|Win32
 		{887875CF-C5B1-46DB-B336-223E48FFB256}.Release|x64.ActiveCfg = Release|x64
 		{887875CF-C5B1-46DB-B336-223E48FFB256}.Release|x64.Build.0 = Release|x64
+		{11E07842-7DD3-43AC-944C-992182C492FE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{11E07842-7DD3-43AC-944C-992182C492FE}.Debug|Win32.Build.0 = Debug|Win32
+		{11E07842-7DD3-43AC-944C-992182C492FE}.Debug|x64.ActiveCfg = Debug|x64
+		{11E07842-7DD3-43AC-944C-992182C492FE}.Debug|x64.Build.0 = Debug|x64
+		{11E07842-7DD3-43AC-944C-992182C492FE}.Release|Win32.ActiveCfg = Release|Win32
+		{11E07842-7DD3-43AC-944C-992182C492FE}.Release|Win32.Build.0 = Release|Win32
+		{11E07842-7DD3-43AC-944C-992182C492FE}.Release|x64.ActiveCfg = Release|x64
+		{11E07842-7DD3-43AC-944C-992182C492FE}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
